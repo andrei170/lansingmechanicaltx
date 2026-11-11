@@ -21,7 +21,7 @@
 <div><form class="quote" method="post" action="mailto:lansing@lmtxmail.com" enctype="text/plain">
 <h2>Request service</h2><div class="sub">Tell us what you need and your zip. We call you back.</div>
 <label for="jt">What do you need?</label>
-<select id="jt" name="job_type"><option>No heat or no AC right now</option><option>Heating check and tune-up</option><option>Seasonal maintenance</option><option>AC or heating repair</option><option>Mini split for a garage, addition or office</option><option>New system or replacement</option><option>Lake house check before you arrive</option></select>
+<select id="jt" name="job_type"><option>No heat or no AC right now</option><option>Heating check and tune-up</option><option>Seasonal maintenance</option><option>AC or heating repair</option><option>Mini split for a garage, addition or office</option><option>Mini split master bedroom package</option><option>New system or replacement</option><option>Lake house check before you arrive</option></select>
 <label for="zp">Your zip code</label>
 <input id="zp" name="zip" placeholder="76450">
 <label for="wh">How soon?</label>
@@ -73,7 +73,8 @@ document.querySelectorAll('form.quote').forEach(function (f) {
         'Need us sooner? Call or text <a href="tel:+19402290715">(940) 229-0715</a>.';
       f.reset();
     }).catch(function () {
-      note.innerHTML = '<b>Sorry, that did not send.</b> Please call or text <a href="tel:+19402290715">(940) 229-0715</a>.';
+      var mail = 'mailto:lansing@lmtxmail.com?subject=' + encodeURIComponent(data._subject) + '&body=' + encodeURIComponent('Need: ' + data['Need'] + '\nZip: ' + data['Zip'] + '\nHow soon: ' + data['How soon'] + '\nName: ' + data['Name'] + '\nPhone: ' + data['Phone'] + '\nEmail: ' + data['Email']);
+      note.innerHTML = '<b>Sorry, that did not send.</b> <a href="' + mail + '">Email your request instead</a>, or call or text <a href="tel:+19402290715">(940) 229-0715</a>.';
     }).then(function () { if (btn) { btn.disabled = false; } });
   });
 });

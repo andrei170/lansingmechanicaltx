@@ -72,7 +72,8 @@ document.querySelectorAll('form.quote').forEach(function (f) {
         'Need us sooner? Call or text <a href="tel:+19402290715">(940) 229-0715</a>.';
       f.reset();
     }).catch(function () {
-      note.innerHTML = '<b>Sorry, that did not send.</b> Please call or text <a href="tel:+19402290715">(940) 229-0715</a>.';
+      var mail = 'mailto:lansing@lmtxmail.com?subject=' + encodeURIComponent(data._subject) + '&body=' + encodeURIComponent('Need: ' + data['Need'] + '\nZip: ' + data['Zip'] + '\nHow soon: ' + data['How soon'] + '\nName: ' + data['Name'] + '\nPhone: ' + data['Phone'] + '\nEmail: ' + data['Email']);
+      note.innerHTML = '<b>Sorry, that did not send.</b> <a href="' + mail + '">Email your request instead</a>, or call or text <a href="tel:+19402290715">(940) 229-0715</a>.';
     }).then(function () { if (btn) { btn.disabled = false; } });
   });
 });
