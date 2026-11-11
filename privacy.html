@@ -45,21 +45,35 @@ to Wells Fargo's own website, which has its own privacy policy.</p>
 <li><a href="contact.html">Contact</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="quote.html">Free quote</a></li></ul></div>
 </div><div class="legal">&copy; 2026 Lansing Mechanical LLC, Graham, Texas. TACLA35008C. Financing: this credit card is issued with approved credit by Wells Fargo Bank, N.A. Equal Housing Lender.</div></div></footer><div class="mbar"><a href="tel:+19402290715">Call us</a><a class="t" href="sms:+19402290715">Text us</a></div><script>
 document.querySelectorAll('form.quote').forEach(function (f) {
+  f.setAttribute('action', 'https://formsubmit.co/lansing@lmtxmail.com');
+  f.removeAttribute('enctype');
   f.addEventListener('submit', function (e) {
     e.preventDefault();
     var v = function (n) { var el = f.elements[n]; return el ? el.value.trim() : ''; };
     if (!v('name') || !v('phone')) { alert('Please add your name and phone number.'); return; }
-    var body = 'Need: ' + v('job_type') + '\nZip: ' + (v('zip') || '-') + '\nHow soon: ' + v('when') +
-               '\nName: ' + v('name') + '\nPhone: ' + v('phone') + '\nEmail: ' + (v('email') || '-') +
-               '\n\nSent from ' + location.pathname;
-    location.href = 'mailto:lansing@lmtxmail.com?subject=' + encodeURIComponent('Website request: ' + v('job_type')) +
-                    '&body=' + encodeURIComponent(body);
-    // a computer with no email app set up opens nothing, so always say what happened and give a way through
+    var btn = f.querySelector('button, [type=submit]'); if (btn) { btn.disabled = true; }
     var note = f.querySelector('.sent') || document.createElement('div');
-    note.className = 'sent';
-    note.innerHTML = '<b>Your email app should now open with your details filled in. Just press send.</b> ' +
-      'If nothing opened, call or text <a href="tel:+19402290715">(940) 229-0715</a>.';
-    f.appendChild(note);
+    note.className = 'sent'; f.appendChild(note);
+    note.innerHTML = '<b>Sending...</b>';
+    var data = {
+      'Need': v('job_type'), 'Zip': v('zip') || '-', 'How soon': v('when'),
+      'Name': v('name'), 'Phone': v('phone'), 'Email': v('email') || '-',
+      'Page': location.pathname,
+      _subject: 'Website request: ' + v('job_type') + ' - ' + v('name'),
+      _cc: 'andrei@ag1consulting.co', _template: 'table', _captcha: 'false', _honey: ''
+    };
+    if (v('email')) { data._replyto = v('email'); }
+    fetch('https://formsubmit.co/ajax/lansing@lmtxmail.com', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (r) { return r.json(); }).then(function (j) {
+      if (String(j.success) !== 'true' && !/activat/i.test(j.message || '')) { throw new Error(j.message || 'failed'); }
+      note.innerHTML = '<b>Thanks, we have your request and will be in touch shortly.</b> ' +
+        'Need us sooner? Call or text <a href="tel:+19402290715">(940) 229-0715</a>.';
+      f.reset();
+    }).catch(function () {
+      note.innerHTML = '<b>Sorry, that did not send.</b> Please call or text <a href="tel:+19402290715">(940) 229-0715</a>.';
+    }).then(function () { if (btn) { btn.disabled = false; } });
   });
 });
 </script></body></html>
